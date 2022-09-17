@@ -22,22 +22,35 @@ public class Application {
 
             if (choice == 1) {
                 // Register new destination with machine
-                String destination = readString("Please enter a destination: ");
-                double price = readDouble("Please enter a price for a ticket to " + destination + ": ");
 
-
-                tm.registerDestination(destination, price);
-                System.out.println("Destination " + destination + " added");
+                try {
+                    String destination = readString("Please enter a destination: ");
+                    double price = readDouble("Please enter a price for a ticket to " + destination + ": ");
+                    tm.registerDestination(destination, price);
+                    System.out.println();
+                    System.out.println("Destination " + destination + " added");
+                } catch (Exception e) {
+                    System.out.println();
+                    System.out.println(e.getMessage());
+                }
             } else if (choice == 2) {
-                // Show price for specific destination
-                String destination = readString("Please enter a destination: ");
-
-                System.out.println("A ticket to " + destination + " would cost €" + tm.getPrice(destination));
+                try {
+                    String destination = readString("Please enter a destination: ");
+                    System.out.println();
+                    System.out.println("A ticket to " + destination + " would cost €" + tm.getPrice(destination));
+                } catch (Exception e) {
+                    System.out.println();
+                    System.out.println(e.getMessage());
+                }
             } else if (choice == 3) {
-                // Buy ticket to specific destination
-                String destination = readString("Please enter a destination: ");
-
-                System.out.println("Ticket booked with id " + tm.buyTicket(destination));
+                try {
+                    String destination = readString("Please enter a destination: ");
+                    System.out.println();
+                    System.out.println("Ticket booked with id " + tm.buyTicket(destination));
+                } catch (Exception e) {
+                    System.out.println();
+                    System.out.println(e.getMessage());
+                }
             } else if (choice == 4) {
                 // Show all issued tickets
 

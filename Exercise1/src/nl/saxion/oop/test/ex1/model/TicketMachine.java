@@ -1,9 +1,8 @@
 package nl.saxion.oop.test.ex1.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 public class TicketMachine {
 
@@ -12,13 +11,13 @@ public class TicketMachine {
 
     private List<Destination> destinationList;
 
-    private Map<Integer, Destination> ticketList;
+    private List<Ticket> ticketList;
 
     public TicketMachine(String location) {
         this.location = location;
 
         destinationList = new ArrayList<>();
-        ticketList = new HashMap<>();
+        ticketList = new ArrayList<>();
 
     }
 
@@ -30,11 +29,14 @@ public class TicketMachine {
      * @param destination The name of the destination, must not already exist in the machine.
      * @param price       The price to get to that destination as an integer. Note that the price cannot be 0 (or less).
      */
-    public void registerDestination(String destination, double price) {
+    public void registerDestination(String destination, double price)
+            throws Exception {
+
+        validateDestinationNameNotExist(destination);
+        validatePrice(price);
+
         Destination newDestination = new Destination(destination, price);
-
         destinationList.add(newDestination);
-
     }
 
     /**
@@ -45,13 +47,10 @@ public class TicketMachine {
      * @param destinationName The destination that the price is requested for.
      * @return An integer value representing the cost to get to that destination.
      */
-    public double getPrice(String destinationName) {
-        Destination destination = findDestinationByName(destinationName);
-        if (destination != null) {
-            return destination.getPrice();
-        }
+    public double getPrice(String destinationName) throws MachineException {
 
-        return 0.0;
+        Destination destination = findDestinationByName(destinationName);
+        return destination.getPrice();
     }
 
     /**
@@ -63,17 +62,14 @@ public class TicketMachine {
      * @param destinationName The destination the ticket is bought for.
      * @return The unique identifier for the ticket that is issued (int).
      */
-    public int buyTicket(String destinationName) {
+    public int buyTicket(String destinationName) throws Exception {
         Destination destination = findDestinationByName(destinationName);
 
-        if (destination != null) {
-            Integer id = ticketList.size() + 1;
-            ticketList.put(id, destination);
-            return id;
-        }
+        int id = ticketList.size() + 1;
+        Ticket ticket = new Ticket(id, this.location, destination.getDestination(), destination.getPrice());
+        ticketList.add(ticket);
 
-        return -1;
-
+        return id;
     }
 
     @Override
@@ -82,12 +78,12 @@ public class TicketMachine {
         String str = "Tickets issued by this machine:\n";
         double sales = 0.0;
 
-        for (Map.Entry<Integer, Destination> ticket : ticketList.entrySet()) {
+        for (Ticket ticket : ticketList) {
             str += "\t\tTicket " +
-                    ticket.getKey() + " " +
+                    ticket.getId() + " " +
                     this.location + " --> " +
-                    ticket.getValue().getDestination() + " [€" + ticket.getValue().getPrice() + "]\n";
-            sales += ticket.getValue().getPrice();
+                    ticket.getDeparture() + " [€" + ticket.getPrice() + "]\n";
+            sales += ticket.getPrice();
         }
 
         str += "Total sales: € " + sales;
@@ -95,13 +91,27 @@ public class TicketMachine {
         return str;
     }
 
-    private Destination findDestinationByName(String destination) {
+    private Destination findDestinationByName(String destination) throws MachineException {
         for (Destination destinationObject : this.destinationList) {
             if (destinationObject.getDestination().equals(destination)) {
                 return destinationObject;
             }
         }
-        return null;
+
+        throw new MachineException("Not found destination : " + destination);
+    }
+
+    private void validateDestinationNameNotExist(String destinationName)
+            throws MachineException {
+        for (Destination destination : destinationList) {
+            if (Objects.equals(destination.getDestination(), destinationName))
+                throw new MachineException("Destination name exist!");
+        }
+    }
+
+    private void validatePrice(double price) throws Exception {
+        if (price < 0.00)
+            throw new MachineException("The price must never be € 0.00 or less");
     }
 
 
