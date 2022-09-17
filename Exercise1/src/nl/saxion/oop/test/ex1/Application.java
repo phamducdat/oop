@@ -25,7 +25,9 @@ public class Application {
                 String destination = readString("Please enter a destination: ");
                 double price = readDouble("Please enter a price for a ticket to " + destination + ": ");
 
-                // TODO: Register this destination (with price) with the ticket machine. Take care of any exceptions!
+
+                tm.registerDestination(destination, price);
+                System.out.println("Destination " + destination +" added");
             } else if (choice == 2) {
                 // Show price for specific destination
                 String destination = readString("Please enter a destination: ");
