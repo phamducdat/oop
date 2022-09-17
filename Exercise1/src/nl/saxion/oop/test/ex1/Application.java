@@ -22,25 +22,39 @@ public class Application {
 
             if (choice == 1) {
                 // Register new destination with machine
-                String destination = readString("Please enter a destination: ");
-                double price = readDouble("Please enter a price for a ticket to " + destination + ": ");
 
-                // TODO: Register this destination (with price) with the ticket machine. Take care of any exceptions!
+                try {
+                    String destination = readString("Please enter a destination: ");
+                    double price = readDouble("Please enter a price for a ticket to " + destination + ": ");
+                    tm.registerDestination(destination, price);
+                    System.out.println();
+                    System.out.println("Destination " + destination + " added");
+                } catch (Exception e) {
+                    System.out.println();
+                    System.out.println(e.getMessage());
+                }
             } else if (choice == 2) {
-                // Show price for specific destination
-                String destination = readString("Please enter a destination: ");
-
-                // TODO: Retrieve the price for specified destination. Take care of any exceptions!
+                try {
+                    String destination = readString("Please enter a destination: ");
+                    System.out.println();
+                    System.out.println("A ticket to " + destination + " would cost €" + tm.getPrice(destination));
+                } catch (Exception e) {
+                    System.out.println();
+                    System.out.println(e.getMessage());
+                }
             } else if (choice == 3) {
-                // Buy ticket to specific destination
-                String destination = readString("Please enter a destination: ");
-
-                // TODO: Buy a ticket to destination. Take care of any exceptions!
+                try {
+                    String destination = readString("Please enter a destination: ");
+                    System.out.println();
+                    System.out.println("Ticket booked with id " + tm.buyTicket(destination));
+                } catch (Exception e) {
+                    System.out.println();
+                    System.out.println(e.getMessage());
+                }
             } else if (choice == 4) {
                 // Show all issued tickets
 
-                // TODO: Print out all issued tickets using the toString of TicketMachine.
-//                System.out.println(tm);
+                System.out.println(tm.toString());
             } else if (choice == 0) {
                 System.out.println("Goodbye");
             }
@@ -85,7 +99,7 @@ public class Application {
      * @return the parsed value (as integer) read from user.
      */
     private static int readInt() {
-        while(true) {
+        while (true) {
             try {
                 return Integer.parseInt(readString());
             } catch (NumberFormatException nfe) {
@@ -110,7 +124,7 @@ public class Application {
      * @return the parsed value (as double) read from user.
      */
     private static double readDouble() {
-        while(true) {
+        while (true) {
             try {
                 return Double.parseDouble(readString());
             } catch (NumberFormatException nfe) {
