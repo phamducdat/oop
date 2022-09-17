@@ -81,8 +81,8 @@ public class TicketMachine {
         for (Ticket ticket : ticketList) {
             str += "\t\tTicket " +
                     ticket.getId() + " " +
-                    this.location + " --> " +
-                    ticket.getDeparture() + " [€" + ticket.getPrice() + "]\n";
+                    ticket.getDeparture() + " --> " +
+                    ticket.getLocation() + " [€" + ticket.getPrice() + "]\n";
             sales += ticket.getPrice();
         }
 
