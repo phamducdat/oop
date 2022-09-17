@@ -1,7 +1,9 @@
 package nl.saxion.oop.test.ex1.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TicketMachine {
 
@@ -10,10 +12,13 @@ public class TicketMachine {
 
     private List<Destination> destinationList;
 
+    private Map<Integer, Destination> ticketList;
+
     public TicketMachine(String location) {
         this.location = location;
 
         destinationList = new ArrayList<>();
+        ticketList = new HashMap<>();
 
     }
 
@@ -37,10 +42,15 @@ public class TicketMachine {
      * <p>
      * Make sure to throw an exception in case the destination does not exist within the machine!
      *
-     * @param destination The destination that the price is requested for.
+     * @param destinationName The destination that the price is requested for.
      * @return An integer value representing the cost to get to that destination.
      */
-    public double getPrice(String destination) {
+    public double getPrice(String destinationName) {
+        Destination destination = findDestinationByName(destinationName);
+        if (destination != null) {
+            return destination.getPrice();
+        }
+
         return 0.0;
     }
 
@@ -50,11 +60,48 @@ public class TicketMachine {
      * <p>
      * Make sure to throw an exception in case the destination does not exist within the machine!
      *
-     * @param destination The destination the ticket is bought for.
+     * @param destinationName The destination the ticket is bought for.
      * @return The unique identifier for the ticket that is issued (int).
      */
-    public int buyTicket(String destination) {
+    public int buyTicket(String destinationName) {
+        Destination destination = findDestinationByName(destinationName);
+
+        if (destination != null) {
+            Integer id = ticketList.size() + 1;
+            ticketList.put(id, destination);
+            return id;
+        }
+
         return -1;
+
+    }
+
+    @Override
+    public String toString() {
+
+        String str = "Tickets issued by this machine:\n";
+        double sales = 0.0;
+
+        for (Map.Entry<Integer, Destination> ticket : ticketList.entrySet()) {
+            str += "\t\tTicket " +
+                    ticket.getKey() + " " +
+                    this.location + " --> " +
+                    ticket.getValue().getDestination() + " [€" + ticket.getValue().getPrice() + "]\n";
+            sales += ticket.getValue().getPrice();
+        }
+
+        str += "Total sales: € " + sales;
+
+        return str;
+    }
+
+    private Destination findDestinationByName(String destination) {
+        for (Destination destinationObject : this.destinationList) {
+            if (destinationObject.getDestination().equals(destination)) {
+                return destinationObject;
+            }
+        }
+        return null;
     }
 
 
