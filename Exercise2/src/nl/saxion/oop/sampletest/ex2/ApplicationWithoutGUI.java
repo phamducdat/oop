@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 public class ApplicationWithoutGUI {
 
+
+
     public static void main(String[] args){
         System.out.print("Please enter the clients name: ");
         String clientName = readString();
